@@ -1,12 +1,28 @@
 {% extends 'base.html' %}
 
 {% block head %}
-<div class="content-desktop">
-  <h1>Play Poker with Friends!</h1>
-</div>
 {% endblock %}
 
 {% block body %}
+<div class="content-desktop" id="game">
+  <img id="board" src="{{ url_for('static', filename='./img/poker-board5.png') }}">
+</div>
+<div class="content-desktop" id="panel">
+  <div id="login">
+    <h1 id="heading">Play Poker with Friends!</h1>
+    <div class="tab">
+      <button class="tablinks active" id="join" >Join Room</button><!--
+    --><button class="tablinks" id="create">Create Room</button>
+    </div>
+
+    <div id="join-room" class="tabcontent">
+    </div>
+    <div id="create-room" class="tabcontent">
+    </div>
+  </div>
+</div>
+
+</div>
 <div class="content-mobile">
   <h2 class="content-mobile">This website is not available on small screens.</h2>
 </div>
