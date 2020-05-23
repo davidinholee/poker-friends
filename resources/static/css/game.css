@@ -1,0 +1,15 @@
+/* Game board */
+#game {
+    height: 100%;
+    width: 100%;
+}
+#board {
+    max-width: 70%;
+    max-height: 70vh;
+    position: fixed;
+    top:0;
+    left:0;
+    right:0;
+    bottom:10%;
+    margin: auto;
+}

@@ -11,13 +11,50 @@
   <div id="login">
     <h1 id="heading">Play Poker with Friends!</h1>
     <div class="tab">
-      <button class="tablinks active" id="join" >Join Room</button><!--
-    --><button class="tablinks" id="create">Create Room</button>
+      <button class="tab-links" id="join" >Join Room</button><!--
+    --><button class="tab-links" id="create">Create Room</button>
     </div>
 
-    <div id="join-room" class="tabcontent">
+    <div id="join-room" class="tab-content">
+      <form>
+        <label for="username" class="login-label" id="username-label">Username:</label><br>
+        <input type="text" id="username" class="login-form"><br>
+        <label for="room-id" class="login-label" id="room-id-label">Room ID:</label><br>
+        <input type="text" id="room-id" class="login-form"><br>
+      </form>
+      <p class="error" id="room-id-error">&nbsp;</p>
+      <div class="button-container">
+        <button id="join-button" >Join</button>
+      </div>
     </div>
-    <div id="create-room" class="tabcontent">
+
+    <div id="create-room" class="tab-content">
+      <form>
+        <label for="username2" class="login-label" id="username2-label">Username:</label><br>
+        <input type="text" id="username2" class="login-form"><br>
+        <label class="login-label" for="turn-time">Turn Time Limit:</label><br>
+        <select id="turn-time" class="login-form">
+          <option value=0>No Limit</option>
+          <option value=10>10s</option>
+          <option value=30>30s</option>
+          <option value=60>1m</option>
+          <option value=120>2m</option>
+          <option value=600>5m</option>
+        </select><br>
+        <div id="money1">
+          <label for="small-blind" class="login-label" id="blinds-label">Blinds:</label><br>
+          <input type="text" id="small-blind" class="login-form"> /
+          <input type="text" id="big-blind" class="login-form"><br>
+        </div>
+        <div id="money2">
+          <label for="buy-in" class="login-label" id="buy-in-label">Buy In:</label><br>
+          <input type="text" id="buy-in" class="login-form"><br>
+        </div>
+      </form>
+      <p class="error" id="create-error">&nbsp;</p>
+      <div class="button-container">
+        <button id="create-button" >Create</button>
+      </div>
     </div>
   </div>
 </div>
