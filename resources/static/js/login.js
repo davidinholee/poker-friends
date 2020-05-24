@@ -8,6 +8,9 @@ $(document).ready(() => {
     socket.on("connect", function() {
         socket.send("User has connected!");
     });
+    socket.on("disconnect", function() {
+        socket.send("User has disconnected!");
+    });
 
     // General elements
     const joinTab = document.getElementById('join');
@@ -31,7 +34,7 @@ $(document).ready(() => {
     const username2 = $("#username2");
     const username2Label = document.getElementById('username2-label');
     const username2Form = document.getElementById('username2');
-    const turnTime = $("#turn-time");
+    const turnTime = document.getElementById("turn-time");
     const smallBlind = $("#small-blind");
     const bigBlind = $("#big-blind");
     const blindsLabel = document.getElementById('blinds-label');
@@ -162,7 +165,11 @@ $(document).ready(() => {
             } else {
                 createError.innerHTML = "Room created!";
                 const postParameters = {
-                    type: "assignments"
+                    username: username2.val(),
+                    time: turnTime.options[turnTime.selectedIndex].value,
+                    small: smallBlind.val(),
+                    big: bigBlind.val(),
+                    buy: buyIn.val()
                 };
                 socket.emit("create-room", postParameters);
                 socket.disconnect();

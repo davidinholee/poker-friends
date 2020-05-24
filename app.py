@@ -1,17 +1,17 @@
-from flask import Flask, render_template, url_for
-from flask_socketio import SocketIO, send
-from firebase import firebase
-from firebase_admin import db
+from flask import Flask, render_template, url_for, request, make_response
+from flask_socketio import SocketIO, send, emit
+import firebase_admin
+from firebase_admin import credentials, db
+import string
+import random
+import uuid
 
 # Create a Firebase application
-fb = firebase.FirebaseApplication("https://poker-friends-d6d1a.firebaseio.com/", None)
-ref = db.reference("https://poker-friends-d6d1a.firebaseio.com/")
-rooms = ref.child('rooms')
-data = {
-    "Name": "David Inho Lee",
-    "Email": "davidinholee@gmail.com",
-}
-rooms.set(data)
+cred = credentials.Certificate("./poker-friends-d6d1a-firebase-adminsdk-ao0t2-7568eee8c7.json")
+default_app = firebase_admin.initialize_app(cred, {
+    'databaseURL': 'https://poker-friends-d6d1a.firebaseio.com'
+})
+ref = db.reference("/")
 
 # Create app with template and routes folders pointed to correct locations
 app = Flask(__name__, template_folder="resources/templates/", static_folder="resources/static/")
@@ -34,13 +34,42 @@ def handle_message(msg):
 
 @socketio.on('create-room')
 def create_room(json):
-    print('received json: ' + str(json))
-    firebase.get("/poker-friends-d6d1a/rooms", "")
-    data = {
-        "Name": "David Inho Lee",
-        "Email": "davidinholee@gmail.com",
-    }
-    firebase.post("/poker-friends-d6d1a/rooms", data)
+    rooms = ref.child('rooms')
+    users = ref.child('users')
+    room_data = rooms.get()
+    message = ""
+
+    # Create unique room id
+    alphnum = string.ascii_lowercase + string.digits
+    room_id = ''.join((random.choice(alphnum) for i in range(6)))
+    i = 0
+    while True:
+        if not(room_id in room_data):
+            break
+        elif (i > 1000):
+            message = "error"
+            break
+        i += 1
+
+    # Create unique user id
+    user_id = str(uuid.uuid1())
+
+    # Update database with new information
+    rooms.child(room_id).set({"users": [user_id],
+                              "time_limit": json["time"],
+                              "small": json["small"],
+                              "big": json["big"],
+                              "buy_in": json["buy"],
+                              "admin": user_id})
+    users.child(user_id).set({"username": json["username"],
+                              "active_room": room_id})
+
+    # Send information back to front-end
+    resp = make_response(render_template(...))
+    resp.set_cookie('username', 'the username')
+    resp.set_cookie('userid', 'the username')
+    resp.set_cookie('message', 'the username')
+    emit('redirect', {'url': url_for('new_view')})
 
 
 if __name__ == "__main__":
