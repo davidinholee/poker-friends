@@ -3,6 +3,12 @@
  */
 
 $(document).ready(() => {
+    // Socket setup
+    const socket = io();
+    socket.on("connect", function() {
+        socket.send("User has connected!");
+    });
+
     // General elements
     const joinTab = document.getElementById('join');
     const createTab = document.getElementById('create');
@@ -155,6 +161,11 @@ $(document).ready(() => {
                 buyInForm.style.borderBottom = "1px solid #C10000";
             } else {
                 createError.innerHTML = "Room created!";
+                const postParameters = {
+                    type: "assignments"
+                };
+                socket.emit("create-room", postParameters);
+                socket.disconnect();
             }
         }
     }
