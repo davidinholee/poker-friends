@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for, request, make_response
+from flask import Flask, render_template, url_for, request, make_response, redirect
 from flask_socketio import SocketIO, send, emit
 import firebase_admin
 from firebase_admin import credentials, db
@@ -27,6 +27,16 @@ def index():
                            socket_url="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js")
 
 
+@app.route('/<id>')
+def game(id):
+    name = request.cookies.get('userid')
+    print(name)
+    return render_template("game.html",
+                           font_url1="https://fonts.googleapis.com/css?family=Amaranth",
+                           font_url2="https://fonts.googleapis.com/css?family=Averia Libre",
+                           socket_url="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js")
+
+
 @socketio.on("message")
 def handle_message(msg):
     print("Message:", msg)
@@ -37,18 +47,21 @@ def create_room(json):
     rooms = ref.child('rooms')
     users = ref.child('users')
     room_data = rooms.get()
-    message = ""
 
     # Create unique room id
     alphnum = string.ascii_lowercase + string.digits
     room_id = ''.join((random.choice(alphnum) for i in range(6)))
     i = 0
+
     while True:
         if not(room_id in room_data):
             break
         elif (i > 1000):
-            message = "error"
-            break
+            # If somehow not enough unique room ids, just return back to login
+            return render_template("index.html",
+                                   font_url1="https://fonts.googleapis.com/css?family=Amaranth",
+                                   font_url2="https://fonts.googleapis.com/css?family=Averia Libre",
+                                   socket_url="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js")
         i += 1
 
     # Create unique user id
@@ -65,11 +78,10 @@ def create_room(json):
                               "active_room": room_id})
 
     # Send information back to front-end
-    resp = make_response(render_template(...))
-    resp.set_cookie('username', 'the username')
-    resp.set_cookie('userid', 'the username')
-    resp.set_cookie('message', 'the username')
-    emit('redirect', {'url': url_for('new_view')})
+    resp = make_response(redirect('/' + room_id))
+    resp.set_cookie('username', json["username"])
+    resp.set_cookie('userid', user_id)
+    emit('redirect', {'url': url_for("game", id=room_id)})
 
 
 if __name__ == "__main__":

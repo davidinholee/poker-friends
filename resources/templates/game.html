@@ -1,10 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>This is the game!</title>
-</head>
-<body>
+{% extends 'base.html' %}
 
-</body>
-</html>
+{% block head %}
+{% endblock %}
+
+{% block body %}
+<div class="content-desktop" id="game">
+  <img id="board" src="{{ url_for('static', filename='./img/poker-board5.png') }}">
+</div>
+<div class="content-desktop" id="panel">
+</div>
+
+</div>
+<div class="content-mobile">
+  <h2 class="content-mobile">This website is not available on small screens.</h2>
+</div>
+{% endblock %}

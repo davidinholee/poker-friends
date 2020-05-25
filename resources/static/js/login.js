@@ -11,6 +11,10 @@ $(document).ready(() => {
     socket.on("disconnect", function() {
         socket.send("User has disconnected!");
     });
+    socket.on('redirect', function (data) {
+        window.location = data.url;
+        socket.disconnect();
+    });
 
     // General elements
     const joinTab = document.getElementById('join');
@@ -163,7 +167,7 @@ $(document).ready(() => {
                 buyInLabel.style.color = "#C10000";
                 buyInForm.style.borderBottom = "1px solid #C10000";
             } else {
-                createError.innerHTML = "Room created!";
+                createError.innerHTML = "Room creation failed. Please try again later.";
                 const postParameters = {
                     username: username2.val(),
                     time: turnTime.options[turnTime.selectedIndex].value,
@@ -172,11 +176,11 @@ $(document).ready(() => {
                     buy: buyIn.val()
                 };
                 socket.emit("create-room", postParameters);
-                socket.disconnect();
             }
         }
     }
 
+    // Checks if a number is a positive integer.
     function isPositiveInteger(str) {
         const n = Math.floor(Number(str));
         return n !== Infinity && String(n) === str && n > 0;
