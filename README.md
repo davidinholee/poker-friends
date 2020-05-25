@@ -8,3 +8,5 @@
 - Exit room
 - Make database secure in app.py and switch out of test mode
 - Send them the code or the link!
+- Database clears empty rooms/players
+- loading bar
