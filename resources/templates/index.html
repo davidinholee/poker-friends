@@ -4,6 +4,7 @@
 {% endblock %}
 
 {% block body %}
+<script src="{{ url_for('static', filename='./js/login.js') }}"></script>
 <div class="content-desktop" id="game">
   <img id="board" src="{{ url_for('static', filename='./img/poker-board5.png') }}">
 </div>
@@ -51,7 +52,7 @@
           <input type="text" id="buy-in" class="login-form"><br>
         </div>
       </form>
-      <p class="error" id="create-error">&nbsp;</p>
+      <p class="error" id="create-error">{{ error }}</p>
       <div class="button-container">
         <button id="create-button" >Create</button>
       </div>

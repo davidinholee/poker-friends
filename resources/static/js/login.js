@@ -167,7 +167,6 @@ $(document).ready(() => {
                 buyInLabel.style.color = "#C10000";
                 buyInForm.style.borderBottom = "1px solid #C10000";
             } else {
-                createError.innerHTML = "Room creation failed. Please try again later.";
                 const postParameters = {
                     username: username2.val(),
                     time: turnTime.options[turnTime.selectedIndex].value,

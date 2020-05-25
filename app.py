@@ -24,7 +24,8 @@ def index():
     return render_template("index.html",
                            font_url1="https://fonts.googleapis.com/css?family=Amaranth",
                            font_url2="https://fonts.googleapis.com/css?family=Averia Libre",
-                           socket_url="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js")
+                           socket_url="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js",
+                           error=" ")
 
 
 @app.route('/<id>')
@@ -61,7 +62,8 @@ def create_room(json):
             return render_template("index.html",
                                    font_url1="https://fonts.googleapis.com/css?family=Amaranth",
                                    font_url2="https://fonts.googleapis.com/css?family=Averia Libre",
-                                   socket_url="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js")
+                                   socket_url="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js",
+                                   error="Room creation failed. Please try again later.")
         i += 1
 
     # Create unique user id
