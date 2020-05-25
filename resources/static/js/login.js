@@ -12,6 +12,14 @@ $(document).ready(() => {
         socket.send("User has disconnected!");
     });
     socket.on('redirect', function (data) {
+        // Set cookies to save user information
+        const d = new Date();
+        d.setTime(d.getTime() + (24*60*60*1000));
+        const expires = "expires="+ d.toUTCString();
+        document.cookie = "username=" + data.username + ";" + expires + ";path=" + data.url;
+        document.cookie = "userid=" + data.userid + ";" + expires + ";path=" + data.url;
+
+        // Change to game window
         window.location = data.url;
         socket.disconnect();
     });

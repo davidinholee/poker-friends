@@ -55,7 +55,7 @@ def create_room(json):
     i = 0
 
     while True:
-        if not(room_id in room_data):
+        if (room_data is None) or not(room_id in room_data):
             break
         elif (i > 1000):
             # If somehow not enough unique room ids, just return back to login
@@ -79,11 +79,10 @@ def create_room(json):
     users.child(user_id).set({"username": json["username"],
                               "active_room": room_id})
 
-    # Send information back to front-end
-    resp = make_response(redirect('/' + room_id))
-    resp.set_cookie('username', json["username"])
-    resp.set_cookie('userid', user_id)
-    emit('redirect', {'url': url_for("game", id=room_id)})
+    # Send redirect information back to front-end
+    emit('redirect', {'url': url_for("game", id=room_id),
+                      'username': json["username"],
+                      'userid': user_id})
 
 
 if __name__ == "__main__":
