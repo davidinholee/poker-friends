@@ -4,10 +4,11 @@
 {% endblock %}
 
 {% block body %}
+<link rel="stylesheet" href="{{ url_for('static', filename='./css/login.css') }}">
 <script src="{{ url_for('static', filename='./js/login.js') }}"></script>
-<div class="content-desktop" id="game">
-  <img id="board" src="{{ url_for('static', filename='./img/poker-board5.png') }}">
-</div>
+<!--<div class="content-desktop" id="game">-->
+<!--  <img id="board" src="{{ url_for('static', filename='./img/poker-board5.png') }}">-->
+<!--</div>-->
 <div class="content-desktop" id="panel">
   <div id="login">
     <h1 id="heading">Play Poker with Friends!</h1>

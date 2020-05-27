@@ -33,12 +33,11 @@ def index():
 
 @app.route('/<id>')
 def game(id):
-    name = request.cookies.get('userid')
-    print(name)
     return render_template("game.html",
                            font_url1="https://fonts.googleapis.com/css?family=Amaranth",
                            font_url2="https://fonts.googleapis.com/css?family=Averia Libre",
-                           socket_url="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js")
+                           socket_url="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js",
+                           room_id=id)
 
 
 @socketio.on("message")
@@ -79,10 +78,11 @@ def create_room(json):
 
     if user_data is not None:
         # Clean up users database.
-        created = int(user_data[key]["created"])
-        if (created + 1 < day) or (created >= 28 and day > 1 and day < 28):
-            if len(user_data[key]['active_room']) == "":
-                users.child(key).delete()
+        for key in user_data:
+            created = int(user_data[key]["created"])
+            if (created + 1 < day) or (created >= 28 and day > 1 and day < 28):
+                if len(user_data[key]['active_room']) == "":
+                    users.child(key).delete()
 
     # Create unique user id
     user_id = str(uuid.uuid1())

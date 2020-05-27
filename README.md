@@ -10,3 +10,4 @@
 - Send them the code or the link!
 - Database clears empty rooms/players
 - loading bar
+- Send this code or link to your friends!

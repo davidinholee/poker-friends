@@ -12,6 +12,11 @@ $(document).ready(() => {
         socket.send("User has disconnected!");
     });
 
+    // Bottom panel elements
+    const slider = document.getElementById("bet-range");
+    const output = document.getElementById("bet-display");
+
+
     // Get the cookie value of the cookie with name cname.
     function getCookie(cname) {
         const name = cname + "=";
@@ -29,6 +34,13 @@ $(document).ready(() => {
         return "";
     }
 
+    // Update the current slider value
+    slider.oninput = function() {
+        output.value = this.value;
+    }
+
+    // Display the default slider value
+    output.innerHTML = slider.value;
     const a = getCookie("username");
     console.log(a);
 });
