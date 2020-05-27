@@ -11,7 +11,7 @@
 body {
     margin: 50px;
     font-family: sans-serif;
-    background-image: url("../img/bkground.png");
+    background-image: url("../img/background.png");
     background-repeat: repeat;
 }
 input:focus {

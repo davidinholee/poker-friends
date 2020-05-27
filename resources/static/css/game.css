@@ -6,7 +6,7 @@
 #board {
     max-width: 60%;
     max-height: 50vh;
-    position: fixed;
+    position: absolute;
     top:0;
     left:0;
     right:10%;
@@ -97,11 +97,20 @@
 #fold {
     background-color: #FFAFAF;
 }
+#fold:hover {
+    background-color: #FF9999;
+}
 #check {
     background-color: #BFFFAF;
 }
+#check:hover {
+    background-color: #9FFF88;
+}
 #raise {
     background-color: #FFE499;
+}
+#raise:hover {
+    background-color: #FFDB75;
 }
 .slider {
     -webkit-appearance: none;
@@ -166,11 +175,9 @@
     font-size: 15px;
     margin-bottom: 0;
 }
-#exit-room-container {
-}
 #exit-room {
     position: absolute;
-    bottom: 5%;
+    bottom: 2%;
     left: 50%;
     -ms-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
@@ -183,10 +190,109 @@
     text-align: center;
     display:inline-block;
     color: black;
+    background-color: #BCBCBC;
+    padding: 8px;
+    text-decoration: none;
+    font-size: 20px;
+    font-family: Amaranth, serif;
+    border-radius: 5px;
+    margin-right: 20px;
+}
+#exit-room:hover {
+    background-color: #B49595;
+}
+#double-blinds {
+    position: absolute;
+    bottom: 26%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+
+    width: 85%;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    transition: 0.3s;
+    text-align: center;
+    display:inline-block;
+    color: black;
+    background-color: #BCBCBC;
     padding: 8px;
     text-decoration: none;
     font-size: 20px;
     font-family: Amaranth, serif;
     border-radius: 15px;
     margin-right: 20px;
+}
+#double-blinds:hover {
+    background-color: #A2A2A2;
+}
+#blinds-display {
+    position: absolute;
+    bottom: 23%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    font-size: 15px;
+    font-family: Amaranth, serif;
+    color: #868686;
+}
+#stand-up {
+    position: absolute;
+    bottom: 15%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+
+    width: 50%;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    transition: 0.3s;
+    text-align: center;
+    display:inline-block;
+    color: black;
+    background-color: #BCBCBC;
+    padding: 8px;
+    text-decoration: none;
+    font-size: 20px;
+    font-family: Amaranth, serif;
+    border-radius: 15px;
+    margin-right: 20px;
+}
+#stand-up:hover {
+    background-color: #A2A2A2;
+}
+#buy-in-amount {
+    position: absolute;
+    bottom: 35%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    width:70%;
+    text-align:center;
+
+    border-radius: 15px;
+    background: #BCBCBC;
+    opacity: 85%;
+    padding: 10px;
+}
+#buy-in-label {
+    font-size: 20px;
+    font-family: Amaranth, serif;
+    width:40%;
+    opacity: 100%;
+    margin-right: 5%;
+}
+.game-form {
+    margin-bottom: 2px;
+    margin-top: 2px;
+    font-size: 20px;
+    font-family: Amaranth, serif;
+    width: 30%;
+    background-color: white;
+    opacity: 100%;
+    border: none;
+    border-radius: 5px;
+    text-align: center;
 }

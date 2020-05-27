@@ -7,7 +7,8 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='./css/game.css') }}">
 <script src="{{ url_for('static', filename='./js/game.js') }}"></script>
 <div class="content-desktop" id="game">
-  <img id="board" src="{{ url_for('static', filename='./img/poker-board5.png') }}">
+  <img id="board" src="{{ url_for('static', filename='./img/poker-board.png') }}">
+  <img id="sit-down" src="{{ url_for('static', filename='./img/sit-down1.png') }}">
 </div>
 <div class="content-desktop" id="bot-control">
   <div id="main-buttons">
@@ -33,6 +34,19 @@
       Code: {{ room_id }}
       https://pokerfriends.com/{{ room_id }}
     </p>
+  </div>
+  <div id="buy-in-amount">
+    <form autocomplete="off">
+      <label for="buy-in-actual" class="game-label" id="buy-in-label">Buy in for: </label>
+      <input type="text" id="buy-in-actual" class="game-form">
+    </form>
+  </div>
+  <div id="double-blinds-container">
+    <button id="double-blinds">Vote to double blinds (0/1)</button>
+    <p id="blinds-display">Current blinds: 1/2</p>
+  </div>
+  <div id="stand-up-container">
+    <button id="stand-up">Sit Out</button>
   </div>
   <div id="exit-room-container">
     <button id="exit-room">Exit Room</button>

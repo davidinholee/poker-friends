@@ -137,6 +137,9 @@
     position: absolute;
     bottom: 10%;
 }
+#join-button:hover {
+    background-color: #68EC52;
+}
 #create-button {
     border: none;
     outline: none;
@@ -152,4 +155,7 @@
     font-family: Amaranth, serif;
     position: absolute;
     bottom: 10%;
+}
+#create-button:hover {
+    background-color: #68EC52;
 }
