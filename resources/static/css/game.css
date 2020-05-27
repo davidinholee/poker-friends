@@ -10,8 +10,84 @@
     top:0;
     left:0;
     right:10%;
-    bottom:15%;
+    bottom:12%;
     margin: auto;
+}
+#start-game {
+    position: absolute;
+    top: 43%;
+    left: 45%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+
+    border: none;
+    outline: none;
+    cursor: pointer;
+    transition: 0.3s;
+    text-align: center;
+    display:inline-block;
+    color: black;
+    background-color: white;
+    padding: 15px;
+    text-decoration: none;
+    font-size: 25px;
+    font-family: Amaranth, serif;
+    border-radius: 15px;
+    margin-right: 20px;
+}
+#start-game:hover {
+    background-color: #CFFFC0;
+}
+.sit-down {
+    position: absolute;
+    margin: auto;
+    width: 7%;
+    height: 11%;
+    background: url('../img/sit-down1a.png') no-repeat;
+    background-size: contain;
+}
+.sit-down:hover {
+    cursor: hand;
+    width: 7%;
+    height: 11%;
+    background: url('../img/sit-down2a.png') no-repeat;
+    background-size: contain;
+}
+#sit-down1 {
+    top:6%;
+    left:35%;
+}
+#sit-down2 {
+    top:6%;
+    left:50%;
+}
+#sit-down3 {
+    top:14%;
+    left:63.5%;
+}
+#sit-down4 {
+    top:42%;
+    left:67%;
+}
+#sit-down5 {
+    top:67.5%;
+    left:59%;
+}
+#sit-down6 {
+    top:69%;
+    left:43%;
+}
+#sit-down7 {
+    top:67.5%;
+    left:27%;
+}
+#sit-down8 {
+    top:42%;
+    left:17.5%;
+}
+#sit-down9 {
+    top:14%;
+    left:21%;
 }
 
 /* Bottom panel */
@@ -60,7 +136,7 @@
     width: 6%;
     border: none;
     outline: none;
-    cursor: pointer;
+    cursor: text;
     transition: 0.3s;
     text-align: center;
     display:inline-block;

@@ -8,7 +8,16 @@
 <script src="{{ url_for('static', filename='./js/game.js') }}"></script>
 <div class="content-desktop" id="game">
   <img id="board" src="{{ url_for('static', filename='./img/poker-board.png') }}">
-  <img id="sit-down" src="{{ url_for('static', filename='./img/sit-down1.png') }}">
+  <div class = "sit-down" id="sit-down1"></div>
+  <div class = "sit-down" id="sit-down2"></div>
+  <div class = "sit-down" id="sit-down3"></div>
+  <div class = "sit-down" id="sit-down4"></div>
+  <div class = "sit-down" id="sit-down5"></div>
+  <div class = "sit-down" id="sit-down6"></div>
+  <div class = "sit-down" id="sit-down7"></div>
+  <div class = "sit-down" id="sit-down8"></div>
+  <div class = "sit-down" id="sit-down9"></div>
+  <button id="start-game">Start Game</button>
 </div>
 <div class="content-desktop" id="bot-control">
   <div id="main-buttons">
@@ -37,7 +46,7 @@
   </div>
   <div id="buy-in-amount">
     <form autocomplete="off">
-      <label for="buy-in-actual" class="game-label" id="buy-in-label">Buy in for: </label>
+      <label for="buy-in-actual" class="game-label" id="buy-in-label">Buy in for:</label>
       <input type="text" id="buy-in-actual" class="game-form">
     </form>
   </div>
