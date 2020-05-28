@@ -23,6 +23,14 @@ $(document).ready(() => {
         window.location = data.url;
         socket.disconnect();
     });
+    socket.on('error', function (data) {
+        roomError.innerHTML = "Room id does not exist.";
+        loader.style.visibility = "hidden";
+    });
+    socket.on('error2', function (data) {
+        createError.innerHTML = "Room creation failed. Please try again later.";
+        loader.style.visibility = "hidden";
+    });
 
     // General elements
     const joinTab = document.getElementById('join');
@@ -32,6 +40,7 @@ $(document).ready(() => {
     const tabContent = document.getElementsByClassName("tab-content");
     const tabLinks = document.getElementsByClassName("tab-links");
     const loginPanel = document.getElementById("login");
+    const loader = document.getElementById("loader");
     // Join room tab elements
     const joinButton = document.getElementById('join-button');
     const roomID = $("#room-id");
@@ -94,9 +103,12 @@ $(document).ready(() => {
         }
         // Join room if it exists.
         if (roomID.val() !== "" && username.val() !== "") {
-            roomError.innerHTML = "Room id does not exist.";
-            roomIDLabel.style.color = "#C10000";
-            roomIDForm.style.borderBottom = "1px solid #C10000";
+            const postParameters = {
+                username: username.val(),
+                room_id: roomID.val()
+            };
+            socket.emit("join-a-room", postParameters);
+            loader.style.visibility = "visible";
         }
     }
 
@@ -183,6 +195,7 @@ $(document).ready(() => {
                     buy: buyIn.val()
                 };
                 socket.emit("create-room", postParameters);
+                loader.style.visibility = "visible";
             }
         }
     }

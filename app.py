@@ -1,5 +1,5 @@
 from flask import Flask, render_template, url_for, request, make_response, redirect
-from flask_socketio import SocketIO, send, emit
+from flask_socketio import SocketIO, send, emit, join_room, leave_room
 import firebase_admin
 from firebase_admin import credentials, db
 import string
@@ -27,8 +27,7 @@ def index():
     return render_template("index.html",
                            font_url1="https://fonts.googleapis.com/css?family=Amaranth",
                            font_url2="https://fonts.googleapis.com/css?family=Averia Libre",
-                           socket_url="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js",
-                           error=" ")
+                           socket_url="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js")
 
 
 @app.route('/<id>')
@@ -45,35 +44,56 @@ def handle_message(msg):
     print("Message:", msg)
 
 
+@socketio.on('join-a-room')
+def join_a_room(json):
+    room_data = rooms.child(json["room_id"]).child("created").get()
+
+    # Check that the room exists
+    if room_data is not None:
+        # Create unique user id
+        user_id = str(uuid.uuid1())
+
+        users.child(user_id).set({"username": json["username"],
+                                          "active_room": json["room_id"],
+                                          "created": datetime.datetime.now().day})
+
+        # Send redirect information back to front-end
+        emit('redirect', {'url': url_for("game", id=json["room_id"]),
+                          'username': json["username"],
+                          'userid': user_id})
+    else:
+        # Room doesn't exist
+        emit('error')
+
+
+
 @socketio.on('create-room')
 def create_room(json):
-    room_data = rooms.get()
-    user_data = users.get()
-    day = int(datetime.datetime.now().day)
-
     # Create unique room id.
     alphnum = string.ascii_lowercase + string.digits
     room_id = ''.join((random.choice(alphnum) for i in range(6)))
+    room_data = rooms.child(room_id).child("created").get()
     i = 0
+    while True:
+        if room_data is None:
+            break
+        elif i > 1000:
+            # If somehow not enough unique room ids, just return back to login
+            emit('error2')
+            return
+        room_id = ''.join((random.choice(alphnum) for i in range(6)))
+        room_data = rooms.child(room_id).child("created").get()
+        i += 1
 
+    room_data = rooms.get()
+    user_data = users.get()
+    day = int(datetime.datetime.now().day)
+    # Clean up rooms database.
     if room_data is not None:
-        while True:
-            if not(room_id in room_data):
-                break
-            elif i > 1000:
-                # If somehow not enough unique room ids, just return back to login
-                return render_template("index.html",
-                                       font_url1="https://fonts.googleapis.com/css?family=Amaranth",
-                                       font_url2="https://fonts.googleapis.com/css?family=Averia Libre",
-                                       socket_url="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js",
-                                       error="Room creation failed. Please try again later.")
-            i += 1
-
-        # Clean up rooms database.
         for key in room_data:
             created = int(room_data[key]["created"])
             if (created + 1 < day) or (created >= 28 and day > 1 and day < 28):
-                if len(room_data[key]['users']) == 0:
+                if "users" not in room_data[key]:
                     rooms.child(key).delete()
 
     if user_data is not None:
@@ -81,7 +101,7 @@ def create_room(json):
         for key in user_data:
             created = int(user_data[key]["created"])
             if (created + 1 < day) or (created >= 28 and day > 1 and day < 28):
-                if len(user_data[key]['active_room']) == "":
+                if "active_room" not in user_data[key]:
                     users.child(key).delete()
 
     # Create unique user id
@@ -93,16 +113,23 @@ def create_room(json):
                               "small": json["small"],
                               "big": json["big"],
                               "buy_in": json["buy"],
-                              "admin": user_id,
                               "created": datetime.datetime.now().day})
     users.child(user_id).set({"username": json["username"],
-                              "active_room": room_id,
                               "created": datetime.datetime.now().day})
 
     # Send redirect information back to front-end
     emit('redirect', {'url': url_for("game", id=room_id),
                       'username': json["username"],
                       'userid': user_id})
+
+
+@socketio.on('set-room')
+def set_room(json):
+    join_room(json["room_id"])
+    room = rooms.child(json["room_id"])
+    emit("initialize-room", {'buy_in': room.child("buy_in").get(),
+                             'small': room.child("small").get(),
+                             'big': room.child("big").get()})
 
 
 if __name__ == "__main__":

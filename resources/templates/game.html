@@ -6,6 +6,9 @@
 {% block body %}
 <link rel="stylesheet" href="{{ url_for('static', filename='./css/game.css') }}">
 <script src="{{ url_for('static', filename='./js/game.js') }}"></script>
+<script type="text/javascript">
+    const room_id = "{{ room_id }}";
+</script>
 <div class="content-desktop" id="game">
   <img id="board" src="{{ url_for('static', filename='./img/poker-board.png') }}">
   <div class = "sit-down" id="sit-down1"></div>
@@ -24,7 +27,9 @@
     <button class="control" id="fold" >FOLD</button>
     <button class="control" id="check">CHECK</button>
     <button class="control" id="raise">RAISE</button>
+    <button id="lower-bet">-</button>
     <input type="range" min="1" max="100" value="1" class="slider" id="bet-range">
+    <button id="raise-bet">+</button>
     <input type="text" id="bet-display" value="1">
   </div>
   <div class="preset-buttons">

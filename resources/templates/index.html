@@ -6,9 +6,6 @@
 {% block body %}
 <link rel="stylesheet" href="{{ url_for('static', filename='./css/login.css') }}">
 <script src="{{ url_for('static', filename='./js/login.js') }}"></script>
-<!--<div class="content-desktop" id="game">-->
-<!--  <img id="board" src="{{ url_for('static', filename='./img/poker-board5.png') }}">-->
-<!--</div>-->
 <div class="content-desktop" id="panel">
   <div id="login">
     <h1 id="heading">Play Poker with Friends!</h1>
@@ -24,7 +21,7 @@
         <label for="room-id" class="login-label" id="room-id-label">Room ID:</label><br>
         <input type="text" id="room-id" class="login-form"><br>
       </form>
-      <p class="error" id="room-id-error">&nbsp;</p>
+      <p class="error" id="room-id-error">&nbsp</p>
       <div class="button-container">
         <button id="join-button" >Join</button>
       </div>
@@ -53,12 +50,13 @@
           <input type="text" id="buy-in" class="login-form"><br>
         </div>
       </form>
-      <p class="error" id="create-error">{{ error }}</p>
+      <p class="error" id="create-error">&nbsp</p>
       <div class="button-container">
         <button id="create-button" >Create</button>
       </div>
     </div>
   </div>
+  <div class="loader" id="loader"></div>
 </div>
 
 </div>
