@@ -101,7 +101,7 @@ def create_room(json):
         for key in user_data:
             created = int(user_data[key]["created"])
             if (created + 1 < day) or (created >= 28 and day > 1 and day < 28):
-                if "active_room" not in user_data[key]:
+                if user_data[key]["active_room"] not in room_data:
                     users.child(key).delete()
 
     # Create unique user id
@@ -115,7 +115,8 @@ def create_room(json):
                               "buy_in": json["buy"],
                               "created": datetime.datetime.now().day})
     users.child(user_id).set({"username": json["username"],
-                              "created": datetime.datetime.now().day})
+                              "created": datetime.datetime.now().day,
+                              "active_room": room_id})
 
     # Send redirect information back to front-end
     emit('redirect', {'url': url_for("game", id=room_id),
@@ -123,13 +124,31 @@ def create_room(json):
                       'userid': user_id})
 
 
+@socketio.on('make-user')
+def make_user(json):
+    # Create unique user id
+    user_id = str(uuid.uuid1())
+
+    users.child(user_id).set({"username": json["username"],
+                              "created": datetime.datetime.now().day,
+                              "active_room": json["room_id"]})
+    emit('set-cookies', {'username': json["username"], 'userid': user_id})
+
+
 @socketio.on('set-room')
 def set_room(json):
     join_room(json["room_id"])
     room = rooms.child(json["room_id"])
+
+    # Check if account has been made for this room
+    new_user = True
+    if json["room_id"] == users.child(json["user_id"]).child("active_room").get():
+        new_user = False
+
     emit("initialize-room", {'buy_in': room.child("buy_in").get(),
                              'small': room.child("small").get(),
-                             'big': room.child("big").get()})
+                             'big': room.child("big").get(),
+                             'new_user': new_user})
 
 
 if __name__ == "__main__":

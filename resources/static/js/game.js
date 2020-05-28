@@ -6,9 +6,14 @@ $(document).ready(() => {
     // Socket setup
     const socket = io();
     socket.on("connect", function() {
+        let user_id = getCookie("userid");
+        if (user_id === "") {
+            user_id = "0";
+        }
         // Set room id of socket
         const postParameters = {
-            room_id: room_id
+            room_id: room_id,
+            user_id: user_id
         };
         socket.emit("set-room", postParameters);
         socket.send("User has connected!");
@@ -21,14 +26,32 @@ $(document).ready(() => {
     socket.on("initialize-room", function (data) {
         blindsDisplay.innerHTML = "Current blinds: " + data.small + "/" + data.big;
         buyIn.value = data.buy_in;
+
+        if (data.new_user) {
+            login.style.visibility = "visible";
+            loginPanel.style.animation = "0.5s ease-out 0s 1 popOut";
+        }
+    });
+    socket.on("set-cookies", function (data) {
+        // Set cookies to save user information
+        const d = new Date();
+        // Cookies expire in a week
+        d.setTime(d.getTime() + (7*24*60*60*1000));
+        const expires = "expires="+ d.toUTCString();
+        document.cookie = "username=" + data.username + ";" + expires + ";path=" + data.url;
+        document.cookie = "userid=" + data.userid + ";" + expires + ";path=" + data.url;
     });
     socket.on("update-room", function (data) {
-        // Do something
+        //do something
     });
 
     // General elements
     const start = document.getElementById("start-game");
     const sitDowns = document.getElementsByClassName("sit-down");
+    const login = document.getElementById("shade");
+    const loginPanel = document.getElementById("login-panel");
+    const username = document.getElementById("username");
+    const join = document.getElementById("join-button")
     // Bottom panel elements
     const fold = document.getElementById("fold");
     const check = document.getElementById("check");
@@ -71,7 +94,6 @@ $(document).ready(() => {
     slider.oninput = function() {
         output.value = this.value;
     }
-
     // Display the default slider value
     output.innerHTML = slider.value;
     const a = getCookie("username");
@@ -102,6 +124,17 @@ $(document).ready(() => {
         }
         // Number of seat sat down on
         const seat = jQuery(this).attr("id").slice(-1);
+    }
+
+    join.onclick = makeUser;
+    function makeUser() {
+        console.log(username.value);
+        const postParameters = {
+            username: username.value,
+            room_id: room_id
+        };
+        socket.emit("make-user", postParameters);
+        login.style.visibility = "hidden";
     }
 
     start.onclick = startGame;

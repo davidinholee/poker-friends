@@ -14,7 +14,8 @@ $(document).ready(() => {
     socket.on('redirect', function (data) {
         // Set cookies to save user information
         const d = new Date();
-        d.setTime(d.getTime() + (24*60*60*1000));
+        // Cookies expire in a week
+        d.setTime(d.getTime() + (7*24*60*60*1000));
         const expires = "expires="+ d.toUTCString();
         document.cookie = "username=" + data.username + ";" + expires + ";path=" + data.url;
         document.cookie = "userid=" + data.userid + ";" + expires + ";path=" + data.url;
