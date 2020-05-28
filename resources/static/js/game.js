@@ -117,6 +117,7 @@ $(document).ready(() => {
         doubleBlinds.style.visibility = "visible";
         blindsDisplay.style.visibility = "visible";
         sitOut.style.visibility = "visible";
+        start.style.visibility = "visible";
 
         // Hide all other sit downs
         for (var i = 0; i < sitDowns.length; i++) {

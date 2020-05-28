@@ -34,6 +34,7 @@
     font-family: Amaranth, serif;
     border-radius: 15px;
     margin-right: 20px;
+    visibility: hidden;
 }
 #start-game:hover {
     background-color: #CFFFC0;
@@ -88,6 +89,68 @@
 #sit-down9 {
     top:14%;
     left:21%;
+}
+.user {
+    width: 8%;
+    height: fit-content;
+    position: absolute;
+    margin: auto;
+
+    border-radius: 5px;
+    background: white;
+    opacity: 100%;
+    padding: 5px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+.name {
+    margin-top: 0;
+    text-align: center;
+    font-size: 15px;
+    font-family: Amaranth, serif;
+    margin-bottom: 0;
+}
+.chips {
+    margin-top: 0;
+    text-align: center;
+    font-size: 18px;
+    font-family: Amaranth, serif;
+    margin-bottom: 0;
+}
+#user1 {
+    top:14%;
+    left:33%;
+}
+#user2 {
+    top:14%;
+    left:48%;
+}
+#user3 {
+    top:22%;
+    left:63.5%;
+}
+#user4 {
+    top:48%;
+    left:66%;
+}
+#user5 {
+    top:72.5%;
+    left:57%;
+}
+#user6 {
+    top:74%;
+    left:41%;
+}
+#user7 {
+    top:72.5%;
+    left:25%;
+}
+#user8 {
+    top:48%;
+    left:15%;
+}
+#user9 {
+    top:22%;
+    left:17.5%;
 }
 
 /* Login panel */
