@@ -221,7 +221,7 @@
 .login-form {
     margin-bottom: 8px;
     margin-top: 4%;
-    font-size: 30px;
+    font-size: 1.8vw;
     font-family: Amaranth, serif;
     width: 60%;
     background-color: white;
@@ -232,7 +232,7 @@
 .login-label {
     font-family: Amaranth, serif;
     width: 100%;
-    font-size: 30px;
+    font-size: 1.8vw;
     margin-top: 25%;
 }
 .button-container{
@@ -249,7 +249,7 @@
     color: black;
     padding: 10px;
     text-decoration: none;
-    font-size: 20px;
+    font-size: 1.3vw;
     width: 60%;
     font-family: Amaranth, serif;
     margin-bottom: 3%;

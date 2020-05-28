@@ -15,8 +15,8 @@
 #login {
     animation: 0.5s ease-out 0s 1 popOut;
     position: fixed;
-    max-height: 70vh;
-    max-width: 40%;
+    height: fit-content;
+    width: 40%;
     top:0;
     left:0;
     right:0;
@@ -129,7 +129,7 @@
     width: 40%;
 }
 .error {
-    font-size: 18px;
+    font-size: 1.2vw;
     font-family: Amaranth, serif;
     color: #C10000;
     margin-top: -5px;
@@ -151,8 +151,6 @@
     font-size: 1.3vw;
     width: 60%;
     font-family: Amaranth, serif;
-    position: absolute;
-    bottom: 10%;
 }
 #join-button:hover {
     background-color: #68EC52;
@@ -170,8 +168,6 @@
     font-size: 1.3vw;
     width: 60%;
     font-family: Amaranth, serif;
-    position: absolute;
-    bottom: 10%;
 }
 #create-button:hover {
     background-color: #68EC52;
