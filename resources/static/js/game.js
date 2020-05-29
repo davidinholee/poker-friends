@@ -22,6 +22,12 @@ $(document).ready(() => {
         socket.send("User has disconnected!");
     });
 
+    // Redirect back to main page
+    socket.on('redirect', function (data) {
+        window.location = data.url;
+        socket.disconnect();
+    });
+
     // Initialize the layout of the room
     socket.on("initialize-room", function (data) {
         blindsDisplay.innerHTML = "Current blinds: " + data.small + "/" + data.big;
@@ -32,8 +38,9 @@ $(document).ready(() => {
             loginPanel.style.animation = "0.5s ease-out 0s 1 popOut";
         }
     });
+
+    // Set cookies to save user information
     socket.on("set-cookies", function (data) {
-        // Set cookies to save user information
         const d = new Date();
         // Cookies expire in a week
         d.setTime(d.getTime() + (7*24*60*60*1000));
@@ -41,6 +48,18 @@ $(document).ready(() => {
         document.cookie = "username=" + data.username + ";" + expires + ";path=" + data.url;
         document.cookie = "userid=" + data.userid + ";" + expires + ";path=" + data.url;
     });
+
+    // New player has sat down at the table
+    socket.on("new-player", function (data) {
+        const s = data.seat;
+        // Set username and chips
+        document.getElementById("name" + s).innerText = data.username;
+        document.getElementById("chips" + s).innerText = data.chips;
+        // Make user visible
+        document.getElementById("card" + s).style.visibility = "visible";
+        document.getElementById("user" + s).style.animation = "0.4s ease-out 0s 1 popOut";
+    });
+
     socket.on("update-room", function (data) {
         //do something
     });
@@ -125,6 +144,15 @@ $(document).ready(() => {
         }
         // Number of seat sat down on
         const seat = jQuery(this).attr("id").slice(-1);
+
+        const postParameters = {
+            user_id: getCookie("userid"),
+            username: getCookie("username"),
+            buy_in: buyIn.value,
+            seat: seat,
+            room_id: room_id
+        };
+        socket.emit("sit-down", postParameters);
     }
 
     join.onclick = makeUser;

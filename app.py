@@ -22,6 +22,7 @@ app.config["SECRET_KEY"] = "mysecret"
 socketio = SocketIO(app)
 
 
+# Main login page
 @app.route("/")
 def index():
     return render_template("index.html",
@@ -30,6 +31,7 @@ def index():
                            socket_url="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js")
 
 
+# Game page
 @app.route('/<id>')
 def game(id):
     return render_template("game.html",
@@ -39,11 +41,13 @@ def game(id):
                            room_id=id)
 
 
+# Message printing
 @socketio.on("message")
 def handle_message(msg):
     print("Message:", msg)
 
 
+# Joining a game room from the main page
 @socketio.on('join-a-room')
 def join_a_room(json):
     room_data = rooms.child(json["room_id"]).child("created").get()
@@ -66,7 +70,7 @@ def join_a_room(json):
         emit('error')
 
 
-
+# Creating a room from the main page
 @socketio.on('create-room')
 def create_room(json):
     # Create unique room id.
@@ -108,8 +112,7 @@ def create_room(json):
     user_id = str(uuid.uuid1())
 
     # Update database with new information
-    rooms.child(room_id).set({"users": [],
-                              "time_limit": json["time"],
+    rooms.child(room_id).set({"time_limit": json["time"],
                               "small": json["small"],
                               "big": json["big"],
                               "buy_in": json["buy"],
@@ -124,6 +127,7 @@ def create_room(json):
                       'userid': user_id})
 
 
+# Making a user from the game page
 @socketio.on('make-user')
 def make_user(json):
     # Create unique user id
@@ -135,8 +139,13 @@ def make_user(json):
     emit('set-cookies', {'username': json["username"], 'userid': user_id})
 
 
+# Initial game page set up
 @socketio.on('set-room')
 def set_room(json):
+    # Check if room still exists
+    if rooms.child(json["room_id"]).child("created").get() is None:
+        emit('redirect', {'url': url_for("index")})
+
     join_room(json["room_id"])
     room = rooms.child(json["room_id"])
 
@@ -149,6 +158,16 @@ def set_room(json):
                              'small': room.child("small").get(),
                              'big': room.child("big").get(),
                              'new_user': new_user})
+
+
+# Sitting down at the table
+@socketio.on('sit-down')
+def sit_down(json):
+    rooms.child(json["room_id"]).child("users").set({json["seat"]: json["user_id"]})
+    users.child(json["user_id"]).child("chips").set(json["buy_in"])
+    emit("new-player", {'seat': json["seat"],
+                        'chips': json["buy_in"],
+                        'username': json["username"]}, room=json["room_id"])
 
 
 if __name__ == "__main__":
