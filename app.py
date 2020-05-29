@@ -158,14 +158,15 @@ def set_room(json):
 
     # Get all the players at the table's information
     user_list = room.child("users").get()
-    for s in user_list:
-        p_id = user_list[s]
-        if json["user_id"] == p_id:
-            in_game = True
-            seat_num = s
-        p_username = users.child(p_id).child("username").get()
-        p_chips = users.child(p_id).child("chips").get()
-        player_info[s] = [p_username, p_chips]
+    if user_list is not None:
+        for s in user_list:
+            p_id = user_list[s]
+            if json["user_id"] == p_id:
+                in_game = True
+                seat_num = s
+            p_username = users.child(p_id).child("username").get()
+            p_chips = users.child(p_id).child("chips").get()
+            player_info[s] = [p_username, p_chips]
 
     emit("initialize-room", {'buy_in': room.child("buy_in").get(),
                              'small': room.child("small").get(),
