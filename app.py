@@ -148,22 +148,38 @@ def set_room(json):
 
     join_room(json["room_id"])
     room = rooms.child(json["room_id"])
-
-    # Check if account has been made for this room
+    in_game = False
     new_user = True
+    player_info = {}
+    seat_num = -1
+    # Check if account has been made for this room
     if json["room_id"] == users.child(json["user_id"]).child("active_room").get():
         new_user = False
+
+    # Get all the players at the table's information
+    user_list = room.child("users").get()
+    for s in user_list:
+        p_id = user_list[s]
+        if json["user_id"] == p_id:
+            in_game = True
+            seat_num = s
+        p_username = users.child(p_id).child("username").get()
+        p_chips = users.child(p_id).child("chips").get()
+        player_info[s] = [p_username, p_chips]
 
     emit("initialize-room", {'buy_in': room.child("buy_in").get(),
                              'small': room.child("small").get(),
                              'big': room.child("big").get(),
-                             'new_user': new_user})
+                             'new_user': new_user,
+                             'in_game': in_game,
+                             'seat': seat_num,
+                             'players': player_info})
 
 
 # Sitting down at the table
 @socketio.on('sit-down')
 def sit_down(json):
-    rooms.child(json["room_id"]).child("users").set({json["seat"]: json["user_id"]})
+    rooms.child(json["room_id"]).child("users").child(json["seat"]).set(json["user_id"])
     users.child(json["user_id"]).child("chips").set(json["buy_in"])
     emit("new-player", {'seat': json["seat"],
                         'chips': json["buy_in"],

@@ -32,10 +32,28 @@ $(document).ready(() => {
     socket.on("initialize-room", function (data) {
         blindsDisplay.innerHTML = "Current blinds: " + data.small + "/" + data.big;
         buyIn.value = data.buy_in;
+        console.log(data.players);
+        console.log(data.in_game);
 
+        // If new user, show login panel
         if (data.new_user) {
             login.style.visibility = "visible";
             loginPanel.style.animation = "0.5s ease-out 0s 1 popOut";
+        }
+        // If in game, show controls and hide sit downs
+        if (data.in_game) {
+            makeControlsVisible();
+            console.log("Seat num: " + data.seat);
+        }
+        // Show each player currently in game
+        for (let s in data.players) {
+            // Set username and chips
+            document.getElementById("name" + s).innerText = data.players[s][0];
+            document.getElementById("chips" + s).innerText = data.players[s][1];
+            // Make user visible
+            document.getElementById("sit-down" + s).style.visibility = "hidden";
+            document.getElementById("card" + s).style.visibility = "visible";
+            document.getElementById("user" + s).style.animation = "0.4s ease-out 0s 1 popOut";
         }
     });
 
@@ -56,6 +74,7 @@ $(document).ready(() => {
         document.getElementById("name" + s).innerText = data.username;
         document.getElementById("chips" + s).innerText = data.chips;
         // Make user visible
+        document.getElementById("sit-down" + s).style.visibility = "hidden";
         document.getElementById("card" + s).style.visibility = "visible";
         document.getElementById("user" + s).style.animation = "0.4s ease-out 0s 1 popOut";
     });
@@ -117,10 +136,7 @@ $(document).ready(() => {
     output.innerHTML = slider.value;
     const a = getCookie("username");
 
-    for (var i = 0; i < sitDowns.length; i++) {
-        sitDowns[i].onclick = sitDown;
-    }
-    function sitDown() {
+    function makeControlsVisible() {
         // Show all buttons
         fold.style.visibility = "visible";
         check.style.visibility = "visible";
@@ -142,6 +158,13 @@ $(document).ready(() => {
         for (var i = 0; i < sitDowns.length; i++) {
             sitDowns[i].style.visibility = "hidden";
         }
+    }
+
+    for (var i = 0; i < sitDowns.length; i++) {
+        sitDowns[i].onclick = sitDown;
+    }
+    function sitDown() {
+        makeControlsVisible();
         // Number of seat sat down on
         const seat = jQuery(this).attr("id").slice(-1);
 
