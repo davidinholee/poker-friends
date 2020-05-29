@@ -1,5 +1,5 @@
 from poker.Player import Player
-from poker.Deck import Deck
+from poker.deck import Deck
 import random
 
 class Game:

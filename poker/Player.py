@@ -1,5 +1,5 @@
-from poker.Card import Card
-from poker.Deck import Deck
+from poker.card import Card
+from poker.deck import Deck
 
 class Player:
     def __init__(self):
