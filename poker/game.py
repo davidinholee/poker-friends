@@ -1,4 +1,4 @@
-from poker.Player import Player
+from poker.player import Player
 from poker.deck import Deck
 import random
 
