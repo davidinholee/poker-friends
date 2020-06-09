@@ -100,11 +100,9 @@ def create_room(json):
                 if "users" not in room_data[key]:
                     rooms.child(key).delete()
 
-    if user_data is not None:
-        # Clean up users database.
-        for key in user_data:
-            created = int(user_data[key]["created"])
-            if (created + 1 < day) or (created >= 28 and day > 1 and day < 28):
+        if user_data is not None:
+            # Clean up users database.
+            for key in user_data:
                 if user_data[key]["active_room"] not in room_data:
                     users.child(key).delete()
 
@@ -160,6 +158,10 @@ def set_room(json):
     user_list = room.child("users").get()
     if user_list is not None:
         for s in user_list:
+            broken = False
+            if s is None:
+                s = 1
+                broken = True
             p_id = user_list[s]
             if json["user_id"] == p_id:
                 in_game = True
@@ -167,6 +169,13 @@ def set_room(json):
             p_username = users.child(p_id).child("username").get()
             p_chips = users.child(p_id).child("chips").get()
             player_info[s] = [p_username, p_chips]
+            if broken:
+                break
+
+    # Check if game started
+    started = rooms.child(json["room_id"]).child("started").get()
+    if started is None:
+        started = "no"
 
     emit("initialize-room", {'buy_in': room.child("buy_in").get(),
                              'small': room.child("small").get(),
@@ -174,7 +183,8 @@ def set_room(json):
                              'new_user': new_user,
                              'in_game': in_game,
                              'seat': seat_num,
-                             'players': player_info})
+                             'players': player_info,
+                             'started': started})
 
 
 # Sitting down at the table
@@ -182,9 +192,41 @@ def set_room(json):
 def sit_down(json):
     rooms.child(json["room_id"]).child("users").child(json["seat"]).set(json["user_id"])
     users.child(json["user_id"]).child("chips").set(json["buy_in"])
+    # Check if game started
+    started = rooms.child(json["room_id"]).child("started").get()
+    if started is None:
+        started = "no"
     emit("new-player", {'seat': json["seat"],
                         'chips': json["buy_in"],
-                        'username': json["username"]}, room=json["room_id"])
+                        'username': json["username"],
+                        'started': started}, room=json["room_id"])
+    # Check if game should be started
+    start = rooms.child(json["room_id"]).child("started").get()
+    if (start is not None) and (start == "waiting"):
+        start_game(json)
+
+# Starting the game
+@socketio.on('start-game')
+def start_game(json):
+    user_list = rooms.child(json["room_id"]).child("users").get()
+    seats = list(user_list.keys())
+    print(seats)
+    # Set dealer
+    dealer = -1
+    for seat, user in user_list.items():
+        if user == json["user_id"]:
+            rooms.child(json["room_id"]).child("dealer").set(seat)
+            dealer = seat
+
+    if len(user_list) < 2:
+        rooms.child(json["room_id"]).child("started").set("waiting")
+        emit("enough-players", {'not_enough': True}, room=json["room_id"])
+    else:
+        rooms.child(json["room_id"]).child("started").set("started")
+        emit("enough-players", {'not_enough': False}, room=json["room_id"])
+        dealer = seats[seats.index(dealer) - 1]
+
+
 
 
 if __name__ == "__main__":

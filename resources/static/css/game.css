@@ -23,7 +23,6 @@
     border: none;
     outline: none;
     cursor: pointer;
-    transition: 0.3s;
     text-align: center;
     display:inline-block;
     color: black;
@@ -38,6 +37,23 @@
 }
 #start-game:hover {
     background-color: #CFFFC0;
+}
+#waiting {
+    position: absolute;
+    top: 40%;
+    left: 45%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+
+    text-align: center;
+    display:inline-block;
+    color: black;
+    padding: 15px;
+    font-size: 1.6vw;
+    font-family: Amaranth, serif;
+    border-radius: 15px;
+    margin-right: 20px;
+    visibility: hidden;
 }
 .sit-down {
     position: absolute;
@@ -243,7 +259,6 @@
     border: none;
     outline: none;
     cursor: pointer;
-    transition: 0.3s;
     text-align: center;
     background-color: #81FF6C;
     color: black;

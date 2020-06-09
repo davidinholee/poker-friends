@@ -32,8 +32,6 @@ $(document).ready(() => {
     socket.on("initialize-room", function (data) {
         blindsDisplay.innerHTML = "Current blinds: " + data.small + "/" + data.big;
         buyIn.value = data.buy_in;
-        console.log(data.players);
-        console.log(data.in_game);
 
         // If new user, show login panel
         if (data.new_user) {
@@ -42,7 +40,7 @@ $(document).ready(() => {
         }
         // If in game, show controls and hide sit downs
         if (data.in_game) {
-            makeControlsVisible();
+            makeRightPanelVisible(data.started);
             console.log("Seat num: " + data.seat);
         }
         // Show each player currently in game
@@ -77,6 +75,23 @@ $(document).ready(() => {
         document.getElementById("sit-down" + s).style.visibility = "hidden";
         document.getElementById("card" + s).style.visibility = "visible";
         document.getElementById("user" + s).style.animation = "0.4s ease-out 0s 1 popOut";
+        if (data.started === "waiting") {
+            waiting.style.visibility = "visible";
+        } else if (data.started === "no") {
+            start.style.visibility = "visible";
+        }
+    });
+
+    // Show controls if game is to be started, display waiting message otherwise
+    socket.on("enough-players", function (data) {
+        if (data.not_enough) {
+            start.style.visibility = "hidden";
+            waiting.style.visibility = "visible";
+        } else {
+            start.style.visibility = "hidden";
+            waiting.style.visibility="hidden";
+            makeControlsVisible();
+        }
     });
 
     socket.on("update-room", function (data) {
@@ -90,6 +105,7 @@ $(document).ready(() => {
     const loginPanel = document.getElementById("login-panel");
     const username = document.getElementById("username");
     const join = document.getElementById("join-button")
+    const waiting = document.getElementById("waiting");
     // Bottom panel elements
     const fold = document.getElementById("fold");
     const check = document.getElementById("check");
@@ -136,8 +152,25 @@ $(document).ready(() => {
     output.innerHTML = slider.value;
     const a = getCookie("username");
 
+    function makeRightPanelVisible(std) {
+        // Show right panel
+        doubleBlinds.style.visibility = "visible";
+        blindsDisplay.style.visibility = "visible";
+        sitOut.style.visibility = "visible";
+        if (std === "no") {
+            start.style.visibility = "visible";
+        } else if (std === "waiting") {
+            waiting.style.visibility = "visible";
+        }
+
+        // Hide all other sit downs
+        for (var i = 0; i < sitDowns.length; i++) {
+            sitDowns[i].style.visibility = "hidden";
+        }
+    }
+
     function makeControlsVisible() {
-        // Show all buttons
+        // Show bottom panel
         fold.style.visibility = "visible";
         check.style.visibility = "visible";
         raise.style.visibility = "visible";
@@ -149,22 +182,13 @@ $(document).ready(() => {
         half.style.visibility = "visible";
         full.style.visibility = "visible";
         allIn.style.visibility = "visible";
-        doubleBlinds.style.visibility = "visible";
-        blindsDisplay.style.visibility = "visible";
-        sitOut.style.visibility = "visible";
-        start.style.visibility = "visible";
-
-        // Hide all other sit downs
-        for (var i = 0; i < sitDowns.length; i++) {
-            sitDowns[i].style.visibility = "hidden";
-        }
     }
 
     for (var i = 0; i < sitDowns.length; i++) {
         sitDowns[i].onclick = sitDown;
     }
     function sitDown() {
-        makeControlsVisible();
+        makeRightPanelVisible();
         // Number of seat sat down on
         const seat = jQuery(this).attr("id").slice(-1);
 
@@ -180,7 +204,6 @@ $(document).ready(() => {
 
     join.onclick = makeUser;
     function makeUser() {
-        console.log(username.value);
         const postParameters = {
             username: username.value,
             room_id: room_id
@@ -191,6 +214,11 @@ $(document).ready(() => {
 
     start.onclick = startGame;
     function startGame() {
-
+        const postParameters = {
+            user_id: getCookie("userid"),
+            username: username.value,
+            room_id: room_id
+        };
+        socket.emit("start-game", postParameters);
     }
 });
