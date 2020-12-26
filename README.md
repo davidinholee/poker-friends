@@ -1,4 +1,5 @@
 ## Poker Friends!
+By: James Cai and David Inho Lee
 
 ### TODO:
 - Update blinds
